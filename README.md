@@ -1,6 +1,5 @@
 # Branch Predictor Simulator (Java)
-
-A command-line branch prediction simulator that evaluates several classic predictors on branch trace files and reports misprediction statistics.
+Branch prediction simulator (Smith, Bimodal, Gshare, Hybrid) with misprediction stats.
 
 ## Implemented Predictors
 - Smith n-bit counter predictor
@@ -8,7 +7,7 @@ A command-line branch prediction simulator that evaluates several classic predic
 - Gshare predictor (global history XOR with PC index)
 - Hybrid predictor (chooser table selects between Bimodal and Gshare)
 
-## Project Structure (Option B: files in repo root)
+## Project Structure
     .
     ├── sim.java
     ├── BranchPrediction.java
@@ -94,6 +93,3 @@ Place your trace files under `traces/` locally and run commands using those path
 ## Validation Tip
 To compare your output against an expected output file:
     diff -i -w my_output.txt expected_output.txt
-
-## Keywords
-computer architecture, branch prediction, smith counter, bimodal, gshare, hybrid predictor, saturating counters
