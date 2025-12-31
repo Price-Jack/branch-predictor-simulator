@@ -8,11 +8,10 @@ A command-line branch prediction simulator that evaluates several classic predic
 - Gshare predictor (global history XOR with PC index)
 - Hybrid predictor (chooser table selects between Bimodal and Gshare)
 
-## Project Structure
+## Project Structure (Option B: files in repo root)
     .
-    ├── src
-    │   ├── sim.java
-    │   └── BranchPrediction.java
+    ├── sim.java
+    ├── BranchPrediction.java
     ├── Makefile
     ├── README.md
     ├── .gitignore
@@ -34,7 +33,7 @@ Clean:
     make clean
 
 Alternative (without make):
-    javac src/sim.java src/BranchPrediction.java
+    javac sim.java BranchPrediction.java
 
 ## Run
 After `make`, run the program as `./sim` with one of the following formats:
@@ -95,3 +94,6 @@ Place your trace files under `traces/` locally and run commands using those path
 ## Validation Tip
 To compare your output against an expected output file:
     diff -i -w my_output.txt expected_output.txt
+
+## Keywords
+computer architecture, branch prediction, smith counter, bimodal, gshare, hybrid predictor, saturating counters
