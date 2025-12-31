@@ -1,0 +1,15 @@
+# Java build artifacts
+*.class
+
+# If your Makefile creates a launcher named sim, ignore it
+sim
+
+# Local-only data (keep out of public repo)
+traces/
+validation_runs/
+
+# OS/editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
