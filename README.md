@@ -1,95 +1,172 @@
+````md
 # Branch Predictor Simulator (Java)
-Branch prediction simulator (Smith, Bimodal, Gshare, Hybrid) with misprediction stats.
 
-## Implemented Predictors
-- Smith n-bit counter predictor
-- Bimodal predictor (2^M2 table of saturating counters)
-- Gshare predictor (global history XOR with PC index)
-- Hybrid predictor (chooser table selects between Bimodal and Gshare)
+A configurable branch predictor simulator that evaluates prediction accuracy from branch traces. Implements multiple classic predictors used in computer architecture coursework and research: **Smith**, **Bimodal**, **Gshare**, and **Hybrid**.
+
+---
+
+## Features
+- Simulates multiple branch prediction strategies:
+  - **Smith (n-bit counter)**
+  - **Bimodal**
+  - **Gshare**
+  - **Hybrid** (chooser + gshare + bimodal)
+- Runs from the command line with a consistent interface
+- Prints final prediction statistics and predictor table contents (per typical simulator specs)
+- Designed to work with standard branch trace formats
+
+---
 
 ## Project Structure
-    .
-    ├── sim.java
-    ├── BranchPrediction.java
-    ├── Makefile
-    ├── README.md
-    ├── .gitignore
-    ├── traces/            (local only; not committed)
-    └── validation_runs/   (local only; not committed)
+```text
+├── src
+│   ├── sim.java
+│   ├── SmithPredictor.java
+│   ├── BimodalPredictor.java
+│   ├── GSharePredictor.java
+│   └── HybridPredictor.java
+├── examples
+│   └── mini.trace
+├── Makefile
+└── README.md
+````
+
+---
 
 ## Requirements
-- Java JDK 8+ (11+ recommended)
-- make (recommended)
+
+* Java JDK 8+ (11+ recommended)
+* `make` (optional, but recommended)
 
 Check your Java version:
-    java -version
+
+```bash
+java -version
+```
+
+---
 
 ## Build
-Build (recommended):
-    make
 
-Clean:
-    make clean
+Compile and generate the `./sim` launcher:
 
-Alternative (without make):
-    javac sim.java BranchPrediction.java
+```bash
+make
+```
+
+Clean build artifacts:
+
+```bash
+make clean
+```
+
+---
 
 ## Run
-After `make`, run the program as `./sim` with one of the following formats:
 
-Smith n-bit counter:
-    ./sim smith <B> <tracefile>
+General format:
 
-Bimodal:
-    ./sim bimodal <M2> <tracefile>
+```bash
+./sim <predictor> <params...> <trace_file>
+```
 
-Gshare:
-    ./sim gshare <M1> <N> <tracefile>
+Supported predictors (with parameters):
 
-Hybrid:
-    ./sim hybrid <K> <M1> <N> <M2> <tracefile>
+* Smith:
 
-### Parameter Notes
-- B:  number of bits in the Smith counter
-- M2: number of PC bits used to index the Bimodal table (table size = 2^M2)
-- M1: number of PC bits used to index the Gshare table (table size = 2^M1)
-- N:  number of global history bits (typically N <= M1)
-- K:  number of PC bits used to index the chooser table (table size = 2^K)
-- tracefile: path to the trace file (relative paths supported)
+  ```bash
+  ./sim smith <B> <trace_file>
+  ```
+* Bimodal:
 
-### Examples
-    ./sim smith 4 traces/gcc_trace.txt
-    ./sim bimodal 10 traces/gcc_trace.txt
-    ./sim gshare 14 10 traces/gcc_trace.txt
-    ./sim hybrid 8 14 10 10 traces/gcc_trace.txt
+  ```bash
+  ./sim bimodal <M2> <trace_file>
+  ```
+* Gshare:
+
+  ```bash
+  ./sim gshare <M1> <N> <trace_file>
+  ```
+* Hybrid:
+
+  ```bash
+  ./sim hybrid <K> <M1> <N> <M2> <trace_file>
+  ```
+
+### Parameter Details
+
+* `B`: number of bits for the Smith counter (e.g., 1–8)
+* `M2`: number of PC index bits for the Bimodal table (table size = 2^M2)
+* `M1`: number of PC index bits for the Gshare table (table size = 2^M1)
+* `N`: number of Global History Register bits used by Gshare
+* `K`: number of PC index bits for the Hybrid chooser table (chooser size = 2^K)
+* `trace_file`: branch trace input file
+
+---
+
+## Quickstart demo (included mini trace)
+
+```bash
+make
+./sim smith 4 examples/mini.trace
+./sim bimodal 10 examples/mini.trace
+./sim gshare 14 10 examples/mini.trace
+./sim hybrid 8 14 10 10 examples/mini.trace
+```
+
+---
 
 ## Trace Format
-Each line in a trace file is:
-    <hex_branch_pc> t|n
+
+Each line in the trace is:
+
+```text
+<hex_branch_pc> <t|n>
+```
 
 Where:
-- <hex_branch_pc> is the branch instruction address (hex)
-- t means the branch was actually taken
-- n means the branch was actually not taken
+
+* `<hex_branch_pc>` is the branch program counter (hex)
+* `t` = taken
+* `n` = not taken
 
 Example:
-    00a3b5fc t
-    00a3b60c n
+
+```text
+00a3b5fc t
+00a3b60c n
+```
+
+> Note: Large trace files are often not committed to public repos. This repo includes a tiny demo trace in `examples/mini.trace` for quick validation.
+
+---
 
 ## Output
-After running, the simulator prints:
-- total number of predictions (branches)
-- total number of mispredictions
-- misprediction rate (%)
-- final contents of the relevant predictor tables (useful for validation/debugging)
 
-## Local Data Folders (Not Committed)
-This repo is set up to ignore these folders:
-- traces/
-- validation_runs/
+The simulator prints:
 
-Place your trace files under `traces/` locally and run commands using those paths.
+* predictor configuration summary (predictor type + parameters)
+* total predictions and mispredictions
+* misprediction rate (%)
+* final predictor table contents (format may vary by predictor)
 
-## Validation Tip
-To compare your output against an expected output file:
-    diff -i -w my_output.txt expected_output.txt
+---
+
+## Notes for a Public Repo
+
+* Avoid committing large or non-redistributable traces. Use `examples/` for small synthetic demos.
+* `.gitignore` should exclude Java build artifacts like `*.class`.
+
+---
+
+## Ideas for Future Improvements
+
+* Add automated tests using small synthetic traces (golden expected outputs)
+* Add CSV/JSON output mode for plotting and analysis
+* Add support for additional predictors (e.g., perceptron, TAGE) or prefetching-style extensions
+
+Keywords: branch prediction, gshare, bimodal, smith counter, hybrid predictor, computer architecture, simulation
+
+```
+::contentReference[oaicite:0]{index=0}
+```
