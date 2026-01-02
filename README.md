@@ -1,7 +1,7 @@
 ````md
 # Branch Predictor Simulator (Java)
 
-A configurable branch predictor simulator that evaluates prediction accuracy from branch traces. Implements multiple classic predictors used in computer architecture coursework and research: **Smith**, **Bimodal**, **Gshare**, and **Hybrid**.
+A configurable branch predictor simulator that evaluates prediction accuracy from branch traces. Implements multiple classic predictors used in computer architecture: **Smith**, **Bimodal**, **Gshare**, and **Hybrid**.
 
 ---
 
@@ -12,8 +12,8 @@ A configurable branch predictor simulator that evaluates prediction accuracy fro
   - **Gshare**
   - **Hybrid** (chooser + gshare + bimodal)
 - Runs from the command line with a consistent interface
+- Includes a tiny demo trace (`examples/mini.trace`) for quick validation
 - Prints final prediction statistics and predictor table contents (per typical simulator specs)
-- Designed to work with standard branch trace formats
 
 ---
 
@@ -21,10 +21,7 @@ A configurable branch predictor simulator that evaluates prediction accuracy fro
 ```text
 ├── src
 │   ├── sim.java
-│   ├── SmithPredictor.java
-│   ├── BimodalPredictor.java
-│   ├── GSharePredictor.java
-│   └── HybridPredictor.java
+│   └── BranchPrediction.java
 ├── examples
 │   └── mini.trace
 ├── Makefile
@@ -75,23 +72,28 @@ Supported predictors (with parameters):
 * Smith:
 
   ```bash
-  ./sim smith <B> <trace_file>
   ```
-* Bimodal:
 
-  ```bash
-  ./sim bimodal <M2> <trace_file>
-  ```
+./sim smith <B> <trace_file>
+
+````
+- Bimodal:
+```bash
+./sim bimodal <M2> <trace_file>
+````
+
 * Gshare:
 
   ```bash
-  ./sim gshare <M1> <N> <trace_file>
   ```
-* Hybrid:
 
-  ```bash
-  ./sim hybrid <K> <M1> <N> <M2> <trace_file>
-  ```
+./sim gshare <M1> <N> <trace_file>
+
+````
+- Hybrid:
+```bash
+./sim hybrid <K> <M1> <N> <M2> <trace_file>
+````
 
 ### Parameter Details
 
@@ -163,7 +165,7 @@ The simulator prints:
 
 * Add automated tests using small synthetic traces (golden expected outputs)
 * Add CSV/JSON output mode for plotting and analysis
-* Add support for additional predictors (e.g., perceptron, TAGE) or prefetching-style extensions
+* Add support for additional predictors (e.g., perceptron, TAGE)
 
 Keywords: branch prediction, gshare, bimodal, smith counter, hybrid predictor, computer architecture, simulation
 
